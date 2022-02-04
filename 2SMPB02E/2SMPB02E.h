@@ -5,6 +5,8 @@
 #ifndef CATIE_SIXTRON_2SMPB02E_H_
 #define CATIE_SIXTRON_2SMPB02E_H_
 
+#include "mbed.h"
+
 namespace sixtron {
 
 class O2SMPB02E {
@@ -22,7 +24,7 @@ public:
         PRES_TXD2 = 0xF7,
 
         CTRL_MEAS_REG = 0xF4,
-        CHIP_ID1 = 0xD1,
+        CHIP_ID = 0xD1,
         SETUP = 0xF5,
 
         STATUS = 0xF3,
@@ -70,7 +72,14 @@ public:
 
     O2SMPB02E(PinName i2c_sda, PinName i2c_scl);
 
+    bool init();
+
 private:
+
+    int read_chip_id();
+
+    int reset();
+
     /*!
      *  \brief Read register data
      *
@@ -78,7 +87,7 @@ private:
      *  \param value Pointer to the value read from the register
      *  \return 0 on success, 1 on failure
      */
-    int i2c_read_register(RegisterAddress register_address, int8_t *value);
+    int i2c_read_register(RegisterAddress register_address, char *value);
 
     /*!
      *  \brief Write to a register
@@ -87,7 +96,7 @@ private:
      *  \param value Data to store in the register
      *  \return 0 on success, 1 on failure
      */
-    int i2c_write_register(RegisterAddress register_address, int8_t value);
+    int i2c_write_register(RegisterAddress register_address, char value);
 };
 
 } // namespace sixtron
