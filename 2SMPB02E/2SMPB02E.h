@@ -20,18 +20,19 @@ public:
      * \brief Chip registers
      */
     enum class RegisterAddress : char {
+        TEMP_TXD0 = 0xFC,
+        TEMP_TXD1 = 0xFB,
         TEMP_TXD2 = 0xFA,
-        PRES_TXD2 = 0xF7,
-
-        CTRL_MEAS_REG = 0xF4,
-        CHIP_ID = 0xD1,
-        SETUP = 0xF5,
-
-        STATUS = 0xF3,
-        I2CHS = 0xF2,
-        IIR = 0xF1,
+        PRESS_TXD0 = 0xF9,
+        PRESS_TXD1 = 0xF8,
+        PRESS_TXD2 = 0xF7,
+        IO_SETUP = 0xF5,
+        CTRL_MEAS = 0xF4,
+        DEVICE_STAT = 0xF3,
+        I2C_SET = 0xF2,
+        IIR_CNT = 0xF1,
         RESET = 0xE0,
-        PROM_START_ADDR = 0xA0,
+        CHIP_ID = 0xD1,
     };
 
     /*!
@@ -70,11 +71,13 @@ public:
         NOT_INITIALIZED = -1,
     };
 
-    O2SMPB02E(PinName i2c_sda, PinName i2c_scl);
+    O2SMPB02E(PinName i2c_sda, PinName i2c_scl, I2CAddress i2c_address = I2CAddress::Address2);
 
     bool init();
 
 private:
+    I2CAddress _i2c_address;
+    I2C _i2c;
 
     int read_chip_id();
 
