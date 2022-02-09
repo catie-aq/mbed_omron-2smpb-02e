@@ -34,8 +34,6 @@ bool O2SMPB02E::init()
 
     i2c_write_register(RegisterAddress::IIR_CNT, 0x03);
 
-    i2c_write_register(RegisterAddress::CTRL_MEAS, 0xF1);
-
     return true;
 }
 
@@ -54,6 +52,41 @@ int O2SMPB02E::reset()
         return FAILURE;
     }
     return SUCCESS;
+}
+
+double O2SMPB02E::temperature()
+{
+    i2c_write_register(RegisterAddress::CTRL_MEAS, 0xF1);
+
+    char data[3];
+    if (i2c_read_register(RegisterAddress::TEMP_TXD2, data, 3) != SUCCESS) {
+        return FAILURE;
+    }
+
+    int32_t dt = (data[0] << 16 | data[1] << 8 | data[2]) - ((uint32_t)1 << 23);
+
+    float tr = _coef.a0 + (_coef.a1 + _coef.a2 * dt) * dt;
+
+    return tr;
+}
+
+float O2SMPB02E::pressure()
+{
+    double tr = temperature();
+    i2c_write_register(RegisterAddress::CTRL_MEAS, 0xF1);
+
+    char data[3];
+    if (i2c_read_register(RegisterAddress::PRESS_TXD2, data, 3) != SUCCESS) {
+        return FAILURE;
+    }
+
+    int32_t dp = (data[0] << 16 | data[1] << 8 | data[2]) - ((uint32_t)1 << 23);
+
+    double pressure = _coef.b00 + _coef.bt1 * tr + _coef.bp1 * (float)dp + _coef.b11 * dp * tr
+            + _coef.bt2 * tr * tr + _coef.bp2 * dp * dp + _coef.b12 * dp * tr * tr
+            + _coef.b21 * dp * dp * tr + _coef.bp3 * dp * dp * dp;
+
+    return pressure;
 }
 
 void O2SMPB02E::read_coefficient()

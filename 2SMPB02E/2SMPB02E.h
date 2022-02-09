@@ -100,6 +100,10 @@ public:
 
     bool init();
 
+    double temperature();
+
+    float pressure();
+
 private:
     I2CAddress _i2c_address;
     I2C _i2c;
