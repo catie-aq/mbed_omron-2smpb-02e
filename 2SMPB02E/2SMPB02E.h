@@ -33,6 +33,31 @@ public:
         IIR_CNT = 0xF1,
         RESET = 0xE0,
         CHIP_ID = 0xD1,
+        COE_b00_a0_ex = 0xB8,
+        COE_a2_0 = 0xB7,
+        COE_a2_1 = 0xB6,
+        COE_a1_0 = 0xB5,
+        COE_a1_1 = 0xB4,
+        COE_a0_0 = 0xB3,
+        COE_a0_1 = 0xB2,
+        COE_bp3_0 = 0xB1,
+        COE_bp3_1 = 0xB0,
+        COE_b21_0 = 0xAF,
+        COE_b21_1 = 0xAE,
+        COE_b12_0 = 0xAD,
+        COE_b12_1 = 0xAC,
+        COE_bp2_0 = 0xAB,
+        COE_bp2_1 = 0xAA,
+        COE_b11_0 = 0xA9,
+        COE_b11_1 = 0xA8,
+        COE_bp1_0 = 0xA7,
+        COE_bp1_1 = 0xA6,
+        COE_bt2_0 = 0xA5,
+        COE_bt2_1 = 0xA4,
+        COE_bt1_0 = 0xA3,
+        COE_bt1_1 = 0xA2,
+        COE_b00_0 = 0xA1,
+        COE_b00_1 = 0xA0,
     };
 
     /*!
@@ -83,6 +108,19 @@ private:
 
     int reset();
 
+    void read_coefficient();
+
+    typedef struct {
+        /** otp data by multi bytes */
+        int32_t b00, a0;
+        float bt1, bp1;
+        float bt2;
+        float b11, bp2;
+        float b12, b21, bp3;
+        float a1, a2;
+    } _2smpb02e_t;
+
+    _2smpb02e_t _coef;
     /*!
      *  \brief Read register data
      *
@@ -90,7 +128,7 @@ private:
      *  \param value Pointer to the value read from the register
      *  \return 0 on success, 1 on failure
      */
-    int i2c_read_register(RegisterAddress register_address, char *value);
+    int i2c_read_register(RegisterAddress register_address, char *value, uint8_t len);
 
     /*!
      *  \brief Write to a register
