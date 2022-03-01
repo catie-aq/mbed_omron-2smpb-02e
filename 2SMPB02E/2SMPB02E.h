@@ -64,41 +64,16 @@ public:
      * \brief Power mode
      */
     enum class PowerMode : char {
-        MSK_MODE_POWER = 0x03,
-        VAL_MODE_SLEEP = 0x00,
-        VAL_MODE_FORCED = 0x01,
-        VAL_MODE_NORMAL = 0x03,
-    };
-
-    enum class PressureControlMeasure : char {
-        MSK_MODE_P = 0xE3,
-        SFT_MODE_P = 2,
-        VAL_MODE_HIGHSPEED_P = 0x04,
-        VAL_MODE_LOWPOWER_P = 0x08,
-        VAL_MODE_STANDARD_P = 0x10,
-        VAL_MODE_HIGHACCURACY_P = 0x14,
-        VAL_MODE_ULTRAHIGHACCURACY_P = 0x18,
-    };
-
-    enum class TemperatureControlMeasure : char {
-        MSK_MODE_T = 0x1F,
-        SFT_MODE_T = 5,
-        VAL_MODE_HIGHSPEED_T = 0x20,
-        VAL_MODE_LOWPOWER_T = 0x20,
-        VAL_MODE_STANDARD_T = 0x20,
-        VAL_MODE_HIGHACCURACY_T = 0x40,
-        VAL_MODE_ULTRAHIGHACCURACY_T = 0x40,
-    };
-
-    enum class Status : int {
-        OK = 0,
-        PENDING = 1,
-        NOT_INITIALIZED = -1,
+        SLEEP = 0x00,
+        FORCED = 0x01,
+        NORMAL = 0x03,
     };
 
     O2SMPB02E(PinName i2c_sda, PinName i2c_scl, I2CAddress i2c_address = I2CAddress::Address2);
 
     bool init();
+
+    int measure_single_shot();
 
     double temperature();
 

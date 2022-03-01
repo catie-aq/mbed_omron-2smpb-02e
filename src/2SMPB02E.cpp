@@ -54,10 +54,19 @@ int O2SMPB02E::reset()
     return SUCCESS;
 }
 
+int O2SMPB02E::measure_single_shot()
+{
+    if (i2c_write_register(RegisterAddress::CTRL_MEAS,
+                0x101 << 5 | 0x101 << 2 | static_cast<char>(PowerMode::FORCED))
+            != SUCCESS) {
+        return FAILURE;
+    }
+
+    return FAILURE;
+}
+
 double O2SMPB02E::temperature()
 {
-    i2c_write_register(RegisterAddress::CTRL_MEAS, 0xF1);
-
     char data[3];
     if (i2c_read_register(RegisterAddress::TEMP_TXD2, data, 3) != SUCCESS) {
         return FAILURE;
@@ -73,7 +82,6 @@ double O2SMPB02E::temperature()
 float O2SMPB02E::pressure()
 {
     double tr = temperature();
-    i2c_write_register(RegisterAddress::CTRL_MEAS, 0xF1);
 
     char data[3];
     if (i2c_read_register(RegisterAddress::PRESS_TXD2, data, 3) != SUCCESS) {
