@@ -54,6 +54,17 @@ int O2SMPB02E::reset()
     return SUCCESS;
 }
 
+int O2SMPB02E::start_periodic_measurement()
+{
+    if (i2c_write_register(RegisterAddress::CTRL_MEAS,
+                0x101 << 5 | 0x101 << 2 | static_cast<char>(PowerMode::NORMAL))
+            != SUCCESS) {
+        return FAILURE;
+    }
+
+    return FAILURE;
+}
+
 int O2SMPB02E::measure_single_shot()
 {
     if (i2c_write_register(RegisterAddress::CTRL_MEAS,

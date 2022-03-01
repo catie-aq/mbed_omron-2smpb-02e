@@ -75,6 +75,8 @@ public:
 
     int measure_single_shot();
 
+    int start_periodic_measurement();
+
     double temperature();
 
     float pressure();
